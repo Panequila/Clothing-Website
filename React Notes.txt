@@ -56,3 +56,21 @@ a side effect is when a function creates some kind of effect outside of its scop
 	we leave the array empty so that we call it once only when the app mounts to fetch the users and that's it.
 
 SASS is much more effecient way of writing css
+
+Javascript: backticks allow us to use a string variable from react inside of an another string
+
+package-lock.json is generated in the project in order to make sure every devloper uses the same
+version of react and the other packages
+
+using react-router to handle the routing
+react router v6 requires you to have react v16.8
+clashes may happen due to having unmatched versions between react router and react
+
+in react "/" is the base route
+
+More About JSX
+https://reactjs.org/docs/introducing-jsx.html
+
+<outlet> renders the child route's element/component
+
+svg is a scalable file, which means their will be no pixelation
