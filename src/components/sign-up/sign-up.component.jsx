@@ -1,12 +1,13 @@
 import { async } from "@firebase/util";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
-import "./sign-up.styles.scss";
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
 } from "../../utils/firebase/firebase.utils";
+import { UserContext } from "../../contexts/users.context";
+import "./sign-up.styles.scss";
 
 const defaultFormFields = {
   displayName: "",
@@ -19,7 +20,9 @@ const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
 
-  console.log(formFields);
+  //Hooking to the context so that React runs the SignUpForm function whenever the Context changes.
+  const val = useContext(UserContext);
+  console.log("hit");
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
