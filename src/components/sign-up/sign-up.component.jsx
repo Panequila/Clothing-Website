@@ -20,9 +20,11 @@ const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
 
-  //Hooking to the context so that React runs the SignUpForm function whenever the Context changes.
-  const val = useContext(UserContext);
-  console.log("hit");
+  //We get the setCurrentUser function from our Context, to set the "userContext" to the Signed Up User.
+  //const {setCurrentUser} = useContext(UserContext);
+  //Hooking to the context will make React run the all of code in here SignUpForm whenever the Context changes, 
+  //which can be really bad if there are a lot of components hooked to the Cotnext.
+  //const val = useContext(UserContext);
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
@@ -31,6 +33,7 @@ const SignUpForm = () => {
   const handleSignUp = async (event) => {
     //We are saying that we don't want any default behavior to take place, we are gonna handle the event.
     event.preventDefault();
+
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
@@ -40,6 +43,8 @@ const SignUpForm = () => {
         email,
         password
       );
+
+      //setCurrentUser(user);
 
       //Create the UserDocument and pass it the displayName.
       await createUserDocumentFromAuth(user, { displayName });

@@ -9,7 +9,9 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 //A Document is basically the Data, we have to create an instance of it retrieve and update the data inside of our database.
@@ -45,12 +47,17 @@ export const auth = getAuth();
 //A reference to our firestore (database).
 export const db = getFirestore();
 
-//Exporting the Signing In function because we'll use it at the signin.component
 export const signInWithGooglePopup = () => {
   return signInWithPopup(auth, googleProvider);
 };
+
 export const signInWithGoogleRedirect = () => {
   return signInWithRedirect(auth, googleProvider);
+};
+
+export const signInAuthWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
+  return await signInWithEmailAndPassword(auth, email, password);
 };
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
@@ -58,10 +65,16 @@ export const createAuthUserWithEmailAndPassword = async (email, password) => {
   //Calling the imported createUserWithEmailAndPassword.
   return await createUserWithEmailAndPassword(auth, email, password);
 };
-export const signInAuthWithEmailAndPassword = async (email, password) => {
-  if (!email || !password) return;
-  //Calling the imported createUserWithEmailAndPassword.
-  return await signInWithEmailAndPassword(auth, email, password);
+
+export const signOutUser = async () => {
+  await signOut(auth);
+};
+
+//The OnAuthStateChanged functions as a Listener/Observer for all the changes made to the auth.
+//Without it, we'll have to call "setCurrentUser" in the signIn, signUp and NavBar Components to update the "currentUser" value. 
+//The Auth Signleton that we instantiated is keeping track of the "user" value, and it even persists between refreshes of the page and onAuthStateChanged keeps track of it.
+export const onAuthStateChangedListener = (callback) => {
+  onAuthStateChanged(auth, callback);
 };
 
 //This creates the user that we signed in with above, in the actual Firestore database.

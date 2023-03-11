@@ -19,18 +19,17 @@ const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
-  //We get the setCurrentUser function from our Context, to set the "userContext" to the Signed In User.
-  const { setCurrentUser } = useContext(UserContext);
+  //Getting the "setCurrentUser" function from our Context, to set the "userContext" to the Signed In User.
+  //const { setCurrentUser } = useContext(UserContext);
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
   };
 
   const signInWithGoogle = async () => {
-    //Getting the user object and its children from the returned values of the function.
-    const { user } = await signInWithGooglePopup();
-    console.log(user);
-    await createUserDocumentFromAuth(user);
+    await signInWithGooglePopup();
+    //setCurrentUser(user);
+    
   };
 
   const handleSignUp = async (event) => {
@@ -40,7 +39,7 @@ const SignInForm = () => {
     try {
       const { user } = await signInAuthWithEmailAndPassword(email, password);
       //Setting the "currentUser" object in our Context class to the signed in User.
-      setCurrentUser(user);
+      //setCurrentUser(user);
       resetFormFields();
     } catch (error) {
       switch (error.code) {
