@@ -1,4 +1,4 @@
-//gets all of the services we need from firebase
+// Gets all of the services we need from firebase
 // The /app Library abstracts some of the functionality (CRUD) we need to use in our Firebase.
 import { initializeApp } from "firebase/app";
 
@@ -15,7 +15,16 @@ import {
 } from "firebase/auth";
 
 //A Document is basically the Data, we have to create an instance of it retrieve and update the data inside of our database.
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  writeBatch,
+  query,
+  getDocs,
+} from "firebase/firestore";
 
 // Your web app's Firebase configuration
 // This config identifies the app we want to connect to the firebase (clothing-app)
@@ -47,6 +56,46 @@ export const auth = getAuth();
 //A reference to our firestore (database).
 export const db = getFirestore();
 
+// Function for handling the shop data and adding it to the firebase.
+export const addCollectionAndDocuments = async (
+  // Key is database Name
+  collectionKey,
+  objectsToAdd
+) => {
+  // collection is the table we want to add, collectionKey is its name.
+  const collectionRef = collection(db, collectionKey);
+
+  // writeBatch is used for performing multiple writes in one single operation, in our case we are adding multiple objects to the collection.
+  const batch = writeBatch(db);
+
+  objectsToAdd.forEach((object) => {
+    // making a reference to the document and giving it the collection we want to add.
+    const docRef = doc(collectionRef, object.title.toLowerCase());
+    // writes to the document.
+    batch.set(docRef, object);
+  });
+
+  // commits the batch.
+  await batch.commit();
+  console.log("done");
+};
+
+export const getCategoriesAndDocuments = async () => {
+  const collectionRef = collection(db, "categories");
+  const q = query(collectionRef);
+
+  // get a snapshot of the data.
+  const querySnapshot = await getDocs(q);
+  // returns an array of the data
+  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    const { title, items } = docSnapshot.data();
+    acc[title.toLowerCase()] = items;
+    return acc;
+  },{});
+
+  return categoryMap;
+};
+
 export const signInWithGooglePopup = () => {
   return signInWithPopup(auth, googleProvider);
 };
@@ -71,7 +120,7 @@ export const signOutUser = async () => {
 };
 
 //The OnAuthStateChanged functions as a Listener/Observer for all the changes made to the auth.
-//Without it, we'll have to call "setCurrentUser" in the signIn, signUp and NavBar Components to update the "currentUser" value. 
+//Without it, we'll have to call "setCurrentUser" in the signIn, signUp and NavBar Components to update the "currentUser" value.
 //The Auth Signleton that we instantiated is keeping track of the "user" value, and it even persists between refreshes of the page and onAuthStateChanged keeps track of it.
 export const onAuthStateChangedListener = (callback) => {
   onAuthStateChanged(auth, callback);

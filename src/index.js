@@ -5,7 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 //Browser Router is the generic router. It enables and keeps track of the history of the navigations. There are other forms routers but I'll be using this one.
 import { BrowserRouter } from "react-router-dom";
 import { UserProvider } from "./contexts/users.context";
-import { ProductProvider } from "./contexts/products.context";
+import { CategoriesProvider } from "./contexts/categories.context";
 import { CartProvider } from "./contexts/cart.context";
 import "./index.scss";
 
@@ -16,11 +16,11 @@ root.render(
     The same works when using React Context, it allows nested children to access the functions and data of the parents. */}
     <BrowserRouter>
       <UserProvider>
-        <ProductProvider>
+        <CategoriesProvider>
           <CartProvider>
             <App />
           </CartProvider>
-        </ProductProvider>
+        </CategoriesProvider>
       </UserProvider>
     </BrowserRouter>
   </React.StrictMode>
